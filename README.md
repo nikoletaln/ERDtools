@@ -20,7 +20,7 @@ ERD tools is a powerful application developed as part of my thesis project. It p
 
 To install ERD tools, follow these steps:
 
-1. Download the jar file of the latest version of ERD tools from (https://github.com/nikoletaln/thesis2) ----> fixy
+1. Download the jar file of the latest version of ERD tools from https://github.com/nikoletaln/ERDtools
 
 2. Run the jar file and ERD tools will launch.
 
