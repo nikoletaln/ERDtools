@@ -1,0 +1,161 @@
+<mxStylesheet>
+
+	<add as="defaultVertex">
+		<add as="shape" value="label"/>
+		<add as="perimeter" value="rectanglePerimeter"/>
+		<add as="fontSize" value="25"/>
+		<add as="fontFamily" value="Times"/>
+		<add as="strokeColor" value="black"/>
+		<add as="fillColor" value="white"/>
+	</add>
+
+	<add as="defaultEdge">
+		<add as="shape" value="arcline"/>
+		<add as="labelBackgroundColor" value="none"/>
+		<add as="fontSize" value="20"/>
+		<add as="align" value="left"/>
+		<add as="endArrow" value="none"/>
+		<add as="endSize" value="20"/>
+		<add as="startArrow" value="none"/>
+		<add as="startSize" value="20"/>
+		<add as="verticalAlign" value="top"/>
+		<add as="verticalLabelPosition" value="bottom"/>
+		<add as="horizontalLabelPosition" value="bottom"/>
+		<add as="strokeColor" value="black"/>
+		<add as="fontFamily" value="Times"/>
+		<add as="strokeWidth" value="1"/>
+	</add>
+
+	<add as="label">
+		<add as="shape" value="label"/>
+		<add as="perimeter" value="rectanglePerimeter"/>
+		<add as="fontStyle" value="1"/>
+		<add as="align" value="middle"/>
+		<add as="verticalAlign" value="middle"/>
+		<add as="spacing" value="1"/>
+		<add as="spacingLeft" value="4"/>
+		<add as="imageWidth" value="60"/>
+		<add as="imageHeight" value="59"/>
+		<add as="rounded" value="1"/>
+		<add as="shadow" value="1"/>
+		<add as="glass" value="1"/>
+	</add>
+	
+	<add as="icon" extend="label">
+		<add as="align" value="center"/>
+		<add as="imageAlign" value="center"/>
+		<add as="verticalLabelPosition" value="bottom"/>
+		<add as="verticalAlign" value="middle"/>
+		<add as="spacingTop" value="4"/>
+		<add as="labelBackgroundColor" value="#FFFFFF"/>
+		<add as="spacing" value="0"/>
+		<add as="spacingLeft" value="0"/>
+		<add as="spacingTop" value="6"/>
+		<add as="fontStyle" value="0"/>
+		 <add as="fontSize" value="30"/>
+	
+	</add>
+
+	<add as="rectangle">
+		<add as="shape" value="rectangle"/>
+		<add as="perimeter" value="rectanglePerimeter"/>
+	</add>
+
+	<add as="doubleRect"  extend= "doubleRectangle">
+		<add as="shape" value="doubleRect"/>
+		<add as="perimeter" value="rectanglePerimeter"/>
+	</add>
+
+	<add as="ellipse">
+		<add as="shape" value="ellipse"/>
+		<add as="perimeter" value="ellipsePerimeter"/>
+	</add>
+
+	<add as="partial">
+		<add as="shape" value="partial"/>
+		<add as="perimeter" value="ellipsePerimeter"/>
+		<add as="fontStyle" value="6" />
+	</add>
+
+	<add as="primary">
+		<add as="shape" value="primary"/>
+		<add as="perimeter" value="ellipsePerimeter"/>
+		<add as="fontStyle" value="5" />
+	</add>
+
+	<add as="unique">
+		<add as="shape" value="unique"/>
+		<add as="perimeter" value="ellipsePerimeter"/>
+		<add as="fontStyle" value="4" />
+	</add>
+
+	<add as="doubleEl"  extend= "ellipse">
+		<add as="shape" value="doubleEl"/>
+		<add as="perimeter" value="ellipsePerimeter"/>
+	</add>
+
+	<add as="un_dl"  extend= "doubleEllipse">
+		<add as="shape" value="un_dl"/>
+		<add as="perimeter" value="ellipsePerimeter"/>
+		<add as="fontStyle" value="4" />
+
+	</add>
+
+	<add as="dashed"  extend= "ellipse">
+	<add as="shape" value="dashed"/>
+		<add as="perimeter" value="ellipsePerimeter"/>
+		<add as="dashed" value="1" />
+	</add>
+
+	<add as="rhombus">
+		<add as="shape" value="rhombus"/>
+		<add as="perimeter" value="rhombusPerimeter"/>
+	</add>
+
+	<add as="doubleRh" extend= "doubleRhombus">
+		<add as="shape" value="doubleRh"/>
+		<add as="perimeter" value="rhombusPerimeter"/>
+	</add>	
+
+	<add as="d_circle" extend= "ellipse">
+		<add as="shape" value="d_circle"/>
+		<add as="value" value="d"/>
+		<add as="perimeter" value="ellipsePerimeter"/>
+	</add>
+	<add as="o_circle" extend= "ellipse">
+		<add as="shape" value="o_circle"/>
+		<add as="value" value="o"/>
+		<add as="perimeter" value="ellipsePerimeter"/>
+	</add>
+	<add as="U_circle" extend= "ellipse">
+		<add as="shape" value="U_circle"/>
+		<add as="perimeter" value="ellipsePerimeter"/>
+	</add>
+
+
+
+	<add as="straight">
+		<add as="shape" value="connector"/>
+		<add as="endArrow" value="none"/>
+		<add as="edgeStyle" value="none"/>
+	</add>
+
+	<add as = "parallel" extend="defaultEdge">
+		<add as="shape" value="arcline"/>
+		<add as="endArrow" value="open"/>
+		<add as="endSize" value="50"/>
+		<add as="spacingLeft" value="40"/>
+		<add as="verticalLabelPosition" value="top"/>
+		<add as="horizontalLabelPosition" value="top"/>
+		<add as="textPosition" value="top"/>
+		<add as="fontSize" value="10"/>		
+	</add>
+
+	<add as="subsuper" >
+		<add as="shape" value="arcline"/>
+		<add as="endArrow" value="arrowarc"/>
+		<add as="endSize" value="50"/>
+	</add>
+
+
+</mxStylesheet>

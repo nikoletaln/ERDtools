@@ -1,0 +1,13 @@
+{
+    "java.project.sourcePaths": [
+        "swing"
+    ],
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Users\\nikol\\OneDrive\\Desktop\\Διπλωματική\\jgraphx-master\\jgraphx-master\\lib\\jgraphx.jar"
+    ,
+    "lib/**/*.jar",
+    "C:\\Users\\nikol\\OneDrive\\Desktop\\potato1\\lib\\batik-all-1.16.jar"
+]
+
+}

@@ -1,0 +1,9 @@
+{
+    "java.project.sourcePaths": [
+        "swing"
+    ],
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Users\\nikol\\OneDrive\\Desktop\\Διπλωματική\\jgraphx-master\\jgraphx-master\\lib\\jgraphx.jar"
+    ]
+}

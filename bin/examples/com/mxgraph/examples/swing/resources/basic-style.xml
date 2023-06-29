@@ -1,0 +1,59 @@
+<mxStylesheet>
+	<add as="defaultVertex">
+		<add as="shape" value="label"/>
+		<add as="perimeter" value="rectanglePerimeter"/>
+		<add as="fontSize" value="20"/>
+		<add as="align" value="center"/>
+		<add as="verticalAlign" value="middle"/>
+		<add as="strokeColor" value="black"/>
+		<add as="fillColor" value="#fffacd"/>
+		<add as="gradientColor" value="#fffacd"/>
+	</add>
+	<add as="defaultEdge">
+		<add as="shape" value="connector"/>
+		<add as="labelBackgroundColor" value="white"/>
+		
+		<add as="fontSize" value="20"/>
+		<add as="align" value="center"/>
+		<add as="verticalAlign" value="middle"/>
+		<add as="strokeColor" value="black"/>
+	</add>
+	<add as="entity">
+		<add as="edgeStyle" value="entityRelationEdgeStyle"/>
+	</add>
+	
+	<add as="straight">
+		<add as="shape" value="connector"/>
+		//<add as="endArrow" value="classic"/>
+		<add as="edgeStyle" value="none"/>
+	</add>
+	
+	<add as="ellipse">
+		<add as="shape" value="ellipse"/>
+		<add as="perimeter" value="ellipsePerimeter"/>
+	</add>
+	<add as="rhombus">
+		<add as="shape" value="rhombus"/>
+		<add as="perimeter" value="rhombusPerimeter"/>
+	</add>
+	
+	<add as="line">
+		<add as="shape" value="line"/>
+		<add as="strokeWidth" value="1"/>
+		<add as="labelBackgroundColor" value="white"/>
+		<add as="verticalAlign" value="top"/>
+		<add as="spacingTop" value="8"/>
+	</add>
+	<add as="image">
+		<add as="shape" value="image"/>
+		<add as="labelBackgroundColor" value="white"/>
+		<add as="verticalLabelPosition" value="bottom"/>
+		<add as="verticalAlign" value="top"/>
+	</add>
+	<add as="roundImage" extend="image">
+		<add as="perimeter" value="ellipsePerimeter"/>
+	</add>
+	<add as="rhombusImage" extend="image">
+		<add as="perimeter" value="rhombusPerimeter"/>
+	</add>
+</mxStylesheet>

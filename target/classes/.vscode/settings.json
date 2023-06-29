@@ -1,0 +1,10 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Users\\nikol\\OneDrive\\Desktop\\jgraphx.jar",
+    
+        "lib/**/*.jar",
+        "C:\\Users\\nikol\\OneDrive\\Desktop\\potato1\\lib\\batik-all-1.16.jar"
+    ]
+
+}
