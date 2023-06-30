@@ -56,9 +56,7 @@ To run ERD tools on your system, ensure that you meet the following minimum requ
 
 ## Feedback and Support
 
-Your feedback is valuable in improving ERD tools. If you encounter any issues, have suggestions for new features, or need assistance, you can reach out to our support team by visiting
-
- the "Support" section of our website. We are dedicated to providing prompt and helpful support to ensure a smooth experience with our application.
+Your feedback is valuable in improving ERD Tools. If you encounter any issues, have suggestions for new features, or need assistance, you can reach out by sending an email to nikoletaln@gmail.com
 
 
 ## License
