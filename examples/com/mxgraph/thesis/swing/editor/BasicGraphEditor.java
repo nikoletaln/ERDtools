@@ -50,6 +50,7 @@ import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxIGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.mxGraphOutline;
+import com.mxgraph.swing.handler.mxGraphHandler;
 import com.mxgraph.swing.handler.mxKeyboardHandler;
 import com.mxgraph.swing.handler.mxRubberband;
 import com.mxgraph.util.mxEvent;
@@ -399,6 +400,7 @@ public class BasicGraphEditor extends JPanel
 		final mxGraph graph = graphComponent.getGraph();
 		undoManager = createUndoManager();
 
+
 		// Add a resize listener to the graph
 		graphComponent.getGraphControl().addMouseListener(new MouseAdapter() {
    			private double initialWidth;
@@ -414,6 +416,7 @@ public class BasicGraphEditor extends JPanel
            	 // Store the initial width and height of the cell
            	 initialWidth = geometry.getWidth();
            	 initialHeight = geometry.getHeight();
+			 
        		}
     	 }
 
@@ -439,43 +442,48 @@ public class BasicGraphEditor extends JPanel
 
             // Update the cell's geometry in the graph model
             graphComponent.getGraph().getModel().setGeometry(cell, geometry);
+			graph.refresh();
          }
        }  
     });
 
 		// Enable cell resizing
 		graph.setCellsResizable(true);
+		graph.setCellsEditable(false);
+				
 		
 		//Specifies if cell sizes should be automatically updated after a label change. 
-		///graph.setAutoSizeCells (true);
-		 graph.addListener(mxEvent.LABEL_CHANGED, new mxIEventListener() {
-		 	@Override
-		 	public void invoke(Object sender, mxEventObject evt) {
-		 	  mxCell cell = (mxCell) sender ;
-		 	String label = graph.convertValueToString(cell.getValue()); // get the cell's label
+		//graph.setAutoSizeCells (true);
+		//  graph.addListener(mxEvent.LABEL_CHANGED, new mxIEventListener() {
+		//  	@Override
+		//  	public void invoke(Object sender, mxEventObject evt) {
+		//  	  mxCell cell = (mxCell) sender ;
+		//  	String label = graph.convertValueToString(cell.getValue()); // get the cell's label
 
-		 	// measure the label size using the default font
-			mxGraphics2DCanvas canvas = new mxGraphics2DCanvas();
-		 	Font font = ((MenuContainer) canvas).getFont();
-		 	FontMetrics metrics = canvas.getGraphics().getFontMetrics(font);
-		 	int labelWidth = SwingUtilities.computeStringWidth(metrics, label);
-		 	int labelHeight = metrics.getHeight();
+		//  	// measure the label size using the default font
+		// 	mxGraphics2DCanvas canvas = new mxGraphics2DCanvas();
+		//  	Font font = ((MenuContainer) canvas).getFont();
+		//  	FontMetrics metrics = canvas.getGraphics().getFontMetrics(font);
+		//  	int labelWidth = SwingUtilities.computeStringWidth(metrics, label);
+		//  	int labelHeight = metrics.getHeight();
 
-		 	// check if the label size is bigger than the cell size
-		 	if (labelWidth > cell.getGeometry().getWidth() ) {
+		//  	// check if the label size is bigger than the cell size
+		//  	if (labelWidth > cell.getGeometry().getWidth() ) {
     	 		
-				//graph.setAutoSizeCells (true);
+		// 		//graph.setAutoSizeCells (true);
 
-				  // Update the cell size to match the label
-				  mxGeometry geometry = (mxGeometry) cell.getGeometry().clone();
-				  geometry.setWidth(labelWidth + 20); // add some padding to the label size
-				 //  geometry.setHeight(labelHeight + 20);
-				  cell.setGeometry(geometry);
-				  // Refresh the graph to reflect the changes
-				  graph.refresh();
-			}
-		   }
-		 });
+		// 		  // Update the cell size to match the label
+		// 		  mxGeometry geometry = (mxGeometry) cell.getGeometry().clone();
+		// 		  geometry.setWidth(cell.getGeometry().getWidth() + 20); // add some padding to the label size
+		// 		 //  geometry.setHeight(labelHeight + 20);
+		// 		  cell.setGeometry(geometry);
+		// 		  // Refresh the graph to reflect the changes
+		// 		  graph.refresh();
+				  
+		// 	}
+		//    }
+		   
+		//  });  
 		  
 		// Do not change the scale and translation after files have been loaded
 		graph.setResetViewOnRootChange(false);

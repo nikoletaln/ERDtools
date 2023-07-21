@@ -3,6 +3,7 @@
 package com.mxgraph.thesis.swing;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.Iterator;
@@ -13,12 +14,15 @@ import org.w3c.dom.Document;
 import com.mxgraph.io.mxCodec;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
+import com.mxgraph.model.mxICell;
+import com.mxgraph.model.mxIGraphModel;
 import com.mxgraph.shape.mxConnectorShape;
 import com.mxgraph.shape.mxDoubleEllipseShape;
 import com.mxgraph.shape.mxDoubleRectangleShape;
 import com.mxgraph.shape.mxEllipseShape;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.util.mxSwingConstants;
+import com.mxgraph.thesis.swing.GraphEditor.CustomGraph;
 import com.mxgraph.thesis.swing.editor.BasicGraphEditor;
 import com.mxgraph.thesis.swing.editor.EditorMenuBar;
 import com.mxgraph.thesis.swing.editor.EditorPalette;
@@ -215,6 +219,7 @@ public class GraphEditor extends BasicGraphEditor
 			setToolTips(true);
 			//edges aren't allowed to not have a source and/or target terminal defined.
 			graph.setAllowDanglingEdges(false);
+			
 			//graph.setCellsEditable(false);
 			//don't create a new vertex if no target was under the mouse for the new connection
 			getConnectionHandler().setCreateTarget(false);
@@ -222,7 +227,7 @@ public class GraphEditor extends BasicGraphEditor
 			//graph.setCellsResizable(false);
 			//don't connect on drop
 			setConnectable(false);
-		
+			graph.setSplitEnabled(false);		
 			// Loads the defalt stylesheet from an external file
 			mxCodec codec = new mxCodec();
 			Document doc = mxUtils.loadDocument(GraphEditor.class.getResource(
@@ -234,52 +239,56 @@ public class GraphEditor extends BasicGraphEditor
 			getViewport().setBackground(Color.WHITE);
 		}
 
+
+	
 		
 		/**
 		 * Overrides drop behaviour to set the cell style if the target
 		 * is not a valid drop target and the cells are of the same
 		 * type (eg. both vertices or both edges). 
 		 */
-	//	public Object[] importCells(Object[] cells, double dx, double dy,
-	//			Object target, Point location)
-	//	{		
-	//		if (target == null && cells.length == 1 && location != null)
-		//	{
-		//		target = getCellAt(location.x, location.y);
+		// public Object[] importCells(Object[] cells, double dx, double dy,
+		// 		Object target, Point location)
+		// {		
+		// 	if (target == null && cells.length == 1 && location != null)
+		// 	{
+		// 		target = getCellAt(location.x, location.y);
 
-		//		if (target instanceof mxICell && cells[0] instanceof mxICell)
-		//		{
-		//			mxICell targetCell = (mxICell) target;
-		///			mxICell dropCell = (mxICell) cells[0];
+		// 		if (target instanceof mxICell && cells[0] instanceof mxICell)
+		// 		{
+		// 			mxICell targetCell = (mxICell) target;
+		// 			mxICell dropCell = (mxICell) cells[0];
 
-		//			if (targetCell.isVertex() == dropCell.isVertex()
-			//				|| targetCell.isEdge() == dropCell.isEdge())
-			//		{
-			//			mxIGraphModel model = graph.getModel();
-			//			model.setStyle(target, model.getStyle(cells[0]));
-			//			graph.setSelectionCell(target);
-//
-			//			return null;
-			//		}
-				//	  if (targetCell.isVertex() == dropCell.isVertex()) {
-                    // make target null, otherwise we create a group
-                  //  cells = super.importCells(cells, dx, dy, null, location);
+		// 			if (targetCell.isVertex() == dropCell.isVertex()
+		// 					|| targetCell.isEdge() == dropCell.isEdge())
+		// 			{
+		// 				mxIGraphModel model = graph.getModel();
+		// 				model.setStyle(target, model.getStyle(cells[0]));
+		// 				graph.setSelectionCell(target);
 
-                //    Object parent = graph.getModel().getParent(target);
-                    // we cloned it, so update the reference
-                //    dropCell = (mxICell) cells[0];
-                //    graph.insertEdge(parent, null, "", target, dropCell);
-//
-                 //   graph.setSelectionCell(dropCell);
+		// 				return null;
+		// 			}
+		// 			  if (targetCell.isVertex() == dropCell.isVertex()) {
+        //            // make target null, otherwise we create a group
+        //            cells = super.importCells(cells, dx, dy, null, location);
 
-                //    return null;
-               // }
+        //            Object parent = graph.getModel().getParent(target);
+        //            // we cloned it, so update the reference
+        //            dropCell = (mxICell) cells[0];
+        //            graph.insertEdge(parent, null, "", target, dropCell);
 
-			//	}
-		//	}
+        //            graph.setSelectionCell(dropCell);
 
-		//	return super.importCells(cells, dx, dy, target, location);
-	//	}
+        //            return null;
+        //        }
+
+		// 		}
+		// 	}
+
+		// 	return super.importCells(cells, dx, dy, target, location);
+		// }
+
+	
 
 	}
 

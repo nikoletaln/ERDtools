@@ -85,12 +85,9 @@ public class CheckErrors extends JFrame {
                
                 for(Object cE:currentEdges){
                   mxCell edgeSource =  (mxCell) aGraph.getTerminal(cE, true); 
-                  System.out.println( " cell source: " + edgeSource); 
-                  String sourceStyle = edgeSource.getStyle();
-                  System.out.println( " source style: " + sourceStyle); 
+                  String sourceStyle = edgeSource.getStyle(); 
 
                   if(sourceStyle.contains ("ellipse")||cellStyle.contains("ellipse;fontSize")||cellStyle.contains("ellipse;fontStyle=0")||sourceStyle.contains ("doubleEl")) {
-                    System.out.println( " cell edges: " + currentEdges); 
                     hasAtrribute= true;
                   }
                   if(sourceStyle.contains ("unique")||sourceStyle.contains ("un_dl")) {
@@ -217,9 +214,7 @@ public class CheckErrors extends JFrame {
                 
                 for (Object cc : cells) {
                   mxCell cellC = (mxCell) cc;
-                 // String getNameC =  (String) cellC.getValue(); 
-                 // System.out.println("name=" + getNameC);
-                 // System.out.println("owner=" +cellC.getOwner() );
+                 
                   if(cell.hasOwner()==true && cell.getOwner().equals(cellC.getOwner()) && !cellC.equals(cell) && cellC.getValue().equals(cell.getValue())) {
                     AddRow("Attribute",getName,"Attributes belonging to the same element cannot have the same name"); 
                   }
@@ -276,10 +271,10 @@ public class CheckErrors extends JFrame {
 			        // get the edge between the shapes 
 			          Object currEdge = currentEdge[0];
                 String edgeStyle = ((mxCell) currEdge).getStyle();
-                System.out.println(edgeStyle);
+               
                 if (edgeStyle.equals("strokeWidth=5;"+"spacingLeft=20;"+"textPosition=right;"+"fontSize=20;"+"exitX=0.5;exitY=0;exitPerimeter=1")) {
                   hasTotal = true;
-                  System.out.println(edgeStyle);
+              
                 }
               } 
             }
@@ -304,7 +299,7 @@ public class CheckErrors extends JFrame {
                   String edgeStyle = ((mxCell) currEdge).getStyle();
                   if (edgeStyle.equals("strokeWidth=5;"+"spacingLeft=20;"+"textPosition=right;"+"fontSize=20;"+"exitX=0;exitY=0.5;exitPerimeter=1")) {
                     hasTotal = true;
-                    System.out.println(edgeStyle);
+                
                   }
               } 
             }
@@ -328,7 +323,7 @@ public class CheckErrors extends JFrame {
                   String edgeStyle = ((mxCell) currEdge).getStyle();
                   if (edgeStyle.equals("strokeWidth=5;"+"spacingLeft=20;"+"textPosition=right;"+"fontSize=20;"+"exitX=1;exitY=0.5;exitPerimeter=1")) {
                     hasTotal = true;
-                    System.out.println(edgeStyle);
+                 
                   }
               } 
             }
@@ -352,7 +347,7 @@ public class CheckErrors extends JFrame {
                   String edgeStyle = ((mxCell) currEdge).getStyle();
                   if (edgeStyle.equals("strokeWidth=5;"+ "spacingLeft=20;"+"textPosition=right;"+"fontSize=20;"+"exitX=0.5;exitY=1;exitPerimeter=1")) {
                     hasTotal = true;
-                    System.out.println(edgeStyle);
+                  
                   }
               } 
             }

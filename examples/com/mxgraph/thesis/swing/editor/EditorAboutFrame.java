@@ -9,6 +9,7 @@ import java.awt.Frame;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -19,6 +20,7 @@ import java.net.URISyntaxException;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -113,6 +115,14 @@ public class EditorAboutFrame extends JDialog {
 		content.add(new JLabel("Free for personal and educational use"));
 		content.add(new JLabel("Hellenic Open University 2022-2023"));
 		content.add(new JLabel("Master in Information Systems"));
+		content.add(Box.createVerticalStrut(4));
+
+		// Create the logo label
+        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/com/mxgraph/thesis/swing/images/images.png"));
+        JLabel logoLabel = new JLabel(logoIcon);
+       // logoLabel.setAlignmentX(JComponent.RIGHT_ALIGNMENT);
+         // Add the logo label to the content panel
+        content.add(logoLabel);
 
 		try {
 			content.add(Box.createVerticalStrut(10));
@@ -142,7 +152,7 @@ public class EditorAboutFrame extends JDialog {
 		getRootPane().setDefaultButton(closeButton);
 
 		setResizable(false);
-		setSize(600, 400);
+		setSize(600, 500);
 	}
 
 	/**

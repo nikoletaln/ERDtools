@@ -1,42 +1,62 @@
 package com.mxgraph.thesis.swing.editor;
 
+import java.awt.AWTException;
 import java.awt.BasicStroke;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Robot;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.font.TextAttribute;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.CubicCurve2D;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.security.cert.X509CRLEntry;
+import java.text.AttributedString;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.OverlayLayout;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
@@ -46,6 +66,9 @@ import com.mxgraph.analysis.mxAnalysisGraph;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.thesis.swing.editor.Convertor.Foreign;
+import com.mxgraph.thesis.swing.editor.Convertor.LineComponent;
+import com.mxgraph.thesis.swing.editor.Convertor.Table;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
@@ -714,195 +737,194 @@ public class Convertor extends JFrame {
             }//end of multivalued
 
 
-            //makes the relational model
-            if(convertToSQL==false) { 
-              JFrame frame = new JFrame("Relational Schema");
-              frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-              //frame.setSize(600, 500);
-           
-              //gui
-              JPanel contentPanel = new JPanel();
-              contentPanel.setLayout(new BoxLayout(contentPanel,  BoxLayout.Y_AXIS));
-              // Create a panel for each table and add it to the main frame
-              JPanel mainPanel = new JPanel(new GridBagLayout());
-              GridBagConstraints gbc = new GridBagConstraints();
-              gbc.weightx = 0.0;
-              gbc.weighty = 0.0;
-              gbc.fill = GridBagConstraints.HORIZONTAL;
-              gbc.insets = new Insets(30, 5, 30, 5);
-              gbc.gridx = 0;
-              gbc.gridy = GridBagConstraints.RELATIVE;
-              gbc.anchor = GridBagConstraints.NORTHWEST;
-              // Set font size and style for labels in table panels
-              Font labelFont = new Font("Arial", Font.PLAIN, 16);
-
-              // Create a HashMap to hold the JLabels for the attributes
-              HashMap<String, JLabel> attributeLabels = new HashMap<>();
-              // Create a map to store the JLabel instances for each mxCell
-              HashMap<mxCell, JLabel> cellToLabelMap = new HashMap<>();
-              HashMap<JLabel, Point> labelLocations = new HashMap<>();
-
-              // Add each table panel to the main panel
-              for (Table table : tables) {
-                JPanel tablePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-                // Create a titled border with a larger font size
-                Font titleFont = new Font("Arial", Font.BOLD, 18);
-                // border to be titled but invisible
-                TitledBorder  titledBorder = BorderFactory.createTitledBorder(
-                BorderFactory.createLineBorder(new Color(0, 0, 0, 0)),table.name,TitledBorder.LEFT,TitledBorder.ABOVE_TOP);
-                titledBorder.setTitleFont(titleFont);
-                tablePanel.setBorder(titledBorder);
-
-                // Create a line border with a thickness of 1
-                Border lineBorder = BorderFactory.createLineBorder(Color.BLACK, 1);
-                 // Create an empty border with a padding 
-                Border emptyBorder = BorderFactory.createEmptyBorder(2, 2, 2, 2);
-                // Combine the two borders using a compound border
-                Border compoundBorder = BorderFactory.createCompoundBorder(lineBorder, emptyBorder); 
-
-                for (mxCell pk : table.primaryKey) {
-                  String lab = (String) pk.getValue();
-                  JLabel pkLabel = new JLabel(lab);
-                  pkLabel.setBorder(compoundBorder);
-                  pkLabel.setHorizontalAlignment(JLabel.CENTER);
-                  String htmlString = "<html><u style='text-underline-offset: 8px'>" + lab + "</u></html>";
-                  pkLabel.setText(htmlString);
-                  tablePanel.add(pkLabel);
-                  Point labelLocation = pkLabel.getLocation();
-                  SwingUtilities.convertPoint(pkLabel, labelLocation, pkLabel.getParent());
-                  labelLocations.put(pkLabel, labelLocation);
-                  cellToLabelMap.put(pk, pkLabel);
-                }
-
-                for (mxCell attribute : table.attributes) {
-                  String lab = (String) attribute.getValue();
-                  JLabel attributeLabel = new JLabel(lab);
-                  // Add the attribute JLabel to the HashMap
-                  attributeLabels.put(lab,attributeLabel);
-                
-                  for(mxCell pri:table.primaryKey) {
-                    if( attribute != pri ){
-                      attributeLabel.setBorder(compoundBorder);
-                      attributeLabel.setHorizontalAlignment(JLabel.CENTER);
-                      tablePanel.add(attributeLabel);
-                      // Store the label's location
-                      Point labelLocation = attributeLabel.getLocation();
-                      SwingUtilities.convertPoint(attributeLabel, labelLocation, attributeLabel.getParent());
-                      labelLocations.put(attributeLabel, labelLocation);                      
-                      cellToLabelMap.put(attribute, attributeLabel);
-                    }
-                  }
-                
-                }
-
-                // Set font for labels in table panel
-                for (Component component : tablePanel.getComponents()) {
-                    if (component instanceof JLabel) {
-                      JLabel label = (JLabel) component;
-                      label.setFont(labelFont);
-                    }
-                }
-            
-               mainPanel.add(tablePanel, gbc);
-               gbc.insets = new Insets(1, 5, 1, 5);
-              }
-
-               // Add a scroll pane to the main panel
-               JScrollPane scrollPane = new JScrollPane(mainPanel);
-               scrollPane.setPreferredSize(new Dimension(600, 500));
-               contentPanel.add(scrollPane);
-               add(contentPanel);
-
-               setSize(600, 500);
-               // setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-               setVisible(true);
-               frame.setLocation(550 , 10);  
-               frame.pack();
-
-               // Create a new panel for the arrowed lines
-JPanel linePanel = new JPanel() {
-  @Override
-  public void paintComponent(Graphics g) {
-      super.paintComponent(g);
-      Graphics2D g2 = (Graphics2D) g;
-
-      // Iterate over the foreign keys and draw arrowed lines
-      for (Table table : tables) {
-          if (table.foreignKey.size() > 0) {
-              for (Foreign foreignKey : table.foreignKey) {
-                  for (mxCell cell : foreignKey.List) {
-                      mxCell referredCell = foreignKey.refersTo;
-                      Table referredTable = getTableByCell(referredCell, tables);
-                      for (mxCell referredAttribute : referredTable.attributes) {
-                          String referredAttributeName = (String) referredAttribute.getValue();
-                          String sName = (String) cell.getValue();
-                          if (sName.contains("_")) {
-                              String[] parts = sName.split("_");
-                              sName = parts[1];
-                              if (sName.equals(referredAttributeName)) {
-                                  // Get coordinates of labels relative to content panel
-                                  Point sourceLoc = labelLocations.get(cellToLabelMap.get(cell));
-                                  Point targetLoc = labelLocations.get(cellToLabelMap.get(referredAttribute));
-
-                                  // Draw arrowed line
-                                 // g2.setColor(Color.BLACK);
-                                  drawArrowLine(g2, sourceLoc, targetLoc, 10, 2);
-
-                                 // drawArrowLine(g2, sourceLoc.x + 20, sourceLoc.y + 10, targetLoc.x + 20, targetLoc.y + 10, 10, 5);
-                              }
+            if (convertToSQL == false) {
+              // Create a new JFrame for the relational schema
+              JFrame schemaFrame = new JFrame("Relational Schema");
+              schemaFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+              schemaFrame.setLayout(new BorderLayout());
+          
+              // Create a custom panel for drawing the schema
+              JPanel schemaPanel = new JPanel() {
+                  @Override
+                  protected void paintComponent(Graphics g) {
+                      super.paintComponent(g);
+                      Graphics2D g2d = (Graphics2D) g;
+                      g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+          
+                      Map<String, Point> tablePositions = new HashMap<>();
+                      Map<String, List<String>> tableAttribute = new HashMap<>();
+                      int spacing = 100;
+                      int x = spacing;
+                      int y = spacing;
+          
+                      // Iterate over the tables and draw them
+                      for (Table table : tables) {
+                          // Draw the table rectangle
+                          g2d.setColor(Color.LIGHT_GRAY);
+                          int tableWidth = 200 + (table.attributes.size() * 20);
+                          int tableHeight = 55 ;//+ (table.attributes.size() * 20);
+                          g2d.fillRect(x, y+23, tableWidth, tableHeight-23);
+                          g2d.setColor(Color.BLACK);
+                          g2d.drawRect(x, y, tableWidth, tableHeight);
+          
+                         
+                          // Draw the table name
+                          g2d.setFont(new Font("Arial", Font.BOLD, 14));
+                          g2d.drawString(table.name, x + 10, y + 20);
+          
+                          // Draw the primary key attributes and table attributes in the same line
+                          g2d.setFont(new Font("Arial", Font.PLAIN, 12));
+                          int attributeX = x + 10; // Starting X position for attributes
+                          int attributeY = y + 40; // Starting Y position for attributes
+          
+                          for (mxCell pk : table.primaryKey) {
+                              String attributeName = (String) pk.getValue();
+                              AttributedString attributedString = new AttributedString(attributeName);
+                              attributedString.addAttribute(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                              attributedString.addAttribute(TextAttribute.FONT, g2d.getFont());
+          
+                              // Draw the underlined text
+                              g2d.drawString(attributedString.getIterator(), attributeX, attributeY);
+                              attributeX += g2d.getFontMetrics().stringWidth(attributeName) + 20; // Adjust spacing
+                              tableAttribute.computeIfAbsent(table.name, k -> new ArrayList<>()).add(attributeName);
+                               
                           }
+          
+                          // Draw the table attributes
+                          for (mxCell attribute : table.attributes) {
+                            boolean isForeignKey = false;
+                            for (Foreign foreignKey : table.foreignKey) {
+                              for (mxCell cell : foreignKey.List){
+                                if (cell == attribute) {
+                                 isForeignKey = true;
+                                 break;
+                                }
+                              }
+                            }
+
+                            if (!isForeignKey) {
+                              for (mxCell pri : table.primaryKey) {
+                                if (attribute != pri) {
+                                  String attributeName1 = (String) attribute.getValue();
+                                  g2d.drawString(attributeName1, attributeX, attributeY);
+                                  attributeX += g2d.getFontMetrics().stringWidth(attributeName1) + 20; // Adjust spacing
+                                }
+                              }
+                            }
+                          }
+          
+                          // Store the position of the table
+                          tablePositions.put(table.name, new Point(x , y ));
+                                   
+                           // Update the position for the next table
+                           y += tableHeight + spacing;
                       }
-                  }
-              }
-          }
-      }
-  }
-};
-linePanel.setPreferredSize(new Dimension(600, 500));
-scrollPane.setRowHeaderView(linePanel);
-             
-              // Create a button for saving the relational model as an image
-              JButton saveButton = new JButton("Save as Image");
-              saveButton.addActionListener(new ActionListener() {
-              @Override
-              public void actionPerformed(ActionEvent e) {
-              // Create an image of the relational model
-              BufferedImage image = new BufferedImage(mainPanel.getWidth(), mainPanel.getHeight(), BufferedImage.TYPE_INT_RGB);
-              Graphics2D g = image.createGraphics();
-              mainPanel.paint(g);
-              g.dispose();
-    
-              // Show a dialog for selecting the file to save the image to
-              JFileChooser chooser = new JFileChooser();
-              FileNameExtensionFilter filter = new FileNameExtensionFilter("PNG Images", "png");
-              chooser.setFileFilter(filter);
-              int returnVal = chooser.showSaveDialog(frame);
-              if (returnVal == JFileChooser.APPROVE_OPTION) {
-                 File file = chooser.getSelectedFile();
-                 String filePath = file.getPath();
-                 if (!filePath.toLowerCase().endsWith(".png")) {
-                   file = new File(filePath + ".png");
-                 }
-                 if (file.exists()) { // check if the file already exists
-                  int result = JOptionPane.showConfirmDialog(frame, "The file already exists. Do you want to overwrite it?", "Confirm Overwrite", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-                  if (result != JOptionPane.YES_OPTION) {
-                    return; // user chose not to overwrite, do not save the file
-                  }
-                }
-                try {
-                ImageIO.write(image, "png", file);
-                } catch (IOException ex) {
-                ex.printStackTrace();
-                }
-              }
-            }
-            });
-            contentPanel.add(saveButton);
+          
+                      // Draw the relationship lines
+                      g2d.setStroke(new BasicStroke(2.0f));
+                      g2d.setColor(Color.BLACK);
+
+                      for (Table table : tables) {
+                          for (Foreign foreignKey : table.foreignKey) {
+                              mxCell sourceCell = foreignKey.refersTo;
+                              Table referencedTable = getTableByCell(sourceCell, tables);
+                              if (referencedTable != null) {
+                                  Point source = tablePositions.get(table.name);
+                                  Point target = tablePositions.get(referencedTable.name);
+                                             
+                                  int sourceY = source.y + (55 / 2); // Middle Y-coordinate of the source table
+                                  int sourceX = source.x +   200 + (table.attributes.size() * 20); // Right X-coordinate of the source table
+                                  int targetY = target.y + (55 / 2); // Middle Y-coordinate of the target table
+                                  int targetX = target.x + 200 + (referencedTable.attributes.size() * 20); // Right X-coordinate of the target table
+
+                                  int dx = targetX - sourceX; // Difference in X-coordinates
+                                  int dy = targetY - sourceY; // Difference in Y-coordinates
+                                  int controlX1, controlY1, controlX2, controlY2;
+                                  int distance = Math.max(Math.abs(dx), Math.abs(dy));
+                                  controlX1 = sourceX + distance -100;
+                                  controlY1 = sourceY -100;
+                                  controlX2 = sourceX  + distance -100;
+                                  controlY2 = sourceY -100;
+                        
+                                  // Draw curved line using cubic Bezier curve
+                                  g2d.draw(new CubicCurve2D.Double(sourceX, sourceY, controlX1, controlY1, controlX2, controlY2, targetX, targetY));
+                                }
+                              }
+                            }
+                          }
+                        };       
               
-           }  
+                // Set the preferred size of the schema panel
+                schemaPanel.setPreferredSize(new Dimension(600, 600));
+    
+                // Create a JScrollPane to contain the schema panel
+                JScrollPane scrollPane = new JScrollPane(schemaPanel);
+                // Add the scroll pane to the schema frame
+                schemaFrame.add(scrollPane, BorderLayout.CENTER);
 
-           
+                // Create a "Save" button
+                JButton saveButton = new JButton("Save");
+                saveButton.addActionListener(new ActionListener() {
+                  @Override
+                  public void actionPerformed(ActionEvent e) {
+                      // Prompt the user to choose the save location
+                      JFileChooser fileChooser = new JFileChooser();
+                      fileChooser.setDialogTitle("Save as PNG");
+                      int userSelection = fileChooser.showSaveDialog(schemaFrame);
 
+                      if (userSelection == JFileChooser.APPROVE_OPTION) {
+                          // Get the selected file
+                          File fileToSave = fileChooser.getSelectedFile();
+                          // Ensure the file has ".png" extension
+                          if (!fileToSave.getAbsolutePath().toLowerCase().endsWith(".png")) {
+                            fileToSave = new File(fileToSave.getAbsolutePath() + ".png");
+                          }
+
+                          // Check if the file already exists
+                          if (fileToSave.exists()) {
+                            int response = JOptionPane.showConfirmDialog(schemaFrame, "The file already exists. Do you want to overwrite it?", "File Exists", JOptionPane.YES_NO_OPTION);
+                            if (response != JOptionPane.YES_OPTION) {
+                                return; // Cancel saving
+                            }
+                          }
+
+                          try {
+                            // Create a BufferedImage to store the schema panel content
+                            BufferedImage image = new BufferedImage(schemaFrame.getWidth(), schemaFrame.getHeight(), BufferedImage.TYPE_INT_RGB);
+                            Graphics2D g2d = image.createGraphics();
+                            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+                            // Fill the background with white to match the panel
+                            g2d.setColor(Color.WHITE);
+                            g2d.fillRect(0, 0, schemaPanel.getWidth(), schemaPanel.getHeight());
+                            // Scale the drawing to match the window size
+                            double scaleX = (double) image.getWidth() / (double) schemaPanel.getWidth();
+                            double scaleY = (double) image.getHeight() / (double) schemaPanel.getHeight();
+                            g2d.scale(scaleX, scaleY);
+                            // Draw the panel content onto the BufferedImage
+                            schemaPanel.print(g2d);
+                            g2d.dispose();
+
+                            // Save the image as PNG
+                            ImageIO.write(image, "png", fileToSave);
+                            JOptionPane.showMessageDialog(schemaFrame, "Schema saved as PNG successfully.", "Save", JOptionPane.INFORMATION_MESSAGE);
+                        } catch (IOException ex) {
+                            JOptionPane.showMessageDialog(schemaFrame, "Failed to save schema as PNG.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }
+            });
+
+              // Add the "Save" button to the bottom of the JFrame
+              schemaFrame.add(saveButton, BorderLayout.SOUTH);          
+
+
+              // Set the size and visibility of the schema frame
+              schemaFrame.pack();
+              schemaFrame.setVisible(true);
+            }
+          
             // makes the sql code
             if(convertToSQL==true) {
 
@@ -1005,89 +1027,29 @@ scrollPane.setRowHeaderView(linePanel);
     }
 
 
-
-    public static void drawArrowLine(Graphics g, Point source, Point target, int arrowSize, int stroke) {
-      Graphics2D g2d = (Graphics2D) g;
-      g2d.setStroke(new BasicStroke(stroke));
-      g2d.setColor(Color.BLACK);
+    public class LineComponent extends JComponent {
+      private Point source;
+      private Point target;
   
-      int x1 = source.x;
-      int y1 = source.y;
-      int x2 = target.x;
-      int y2 = target.y;
-  
-      int dx = x2 - x1;
-      int dy = y2 - y1;
-      double theta = Math.atan2(dy, dx);
-      double rad = Math.toRadians(arrowSize);
-      int len = (int) Math.sqrt(dx*dx + dy*dy) - 10;
-  
-      int x3 = (int) (x2 - len * Math.cos(theta));
-      int y3 = (int) (y2 - len * Math.sin(theta));
-  
-      int x4 = (int) (x3 + arrowSize * Math.cos(theta + rad));
-      int y4 = (int) (y3 + arrowSize * Math.sin(theta + rad));
-  
-      int x5 = (int) (x3 + arrowSize * Math.cos(theta - rad));
-      int y5 = (int) (y3 + arrowSize * Math.sin(theta - rad));
-  
-      g2d.drawLine(x1, y1, x2, y2);
-      g2d.drawLine(x2, y2, x4, y4);
-      g2d.drawLine(x2, y2, x5, y5);
-  }
-  
-  
-  
-  
-    public static void drawArrowedLine(JPanel panel, int x1, int y1, int x2, int y2) {
-      System.out.println("drawArrowedLine called");
-      panel.add(new ArrowedLine(x1, y1, x2, y2)); 
-  }
-  
-  private static class ArrowedLine extends JComponent {
-      private final int x1, y1, x2, y2;
-      
-      public ArrowedLine(int x1, int y1, int x2, int y2) {
-          this.x1 = x1;
-          this.y1 = y1;
-          this.x2 = x2;
-          this.y2 = y2;
+      public LineComponent(Point source, Point target) {
+          this.source = source;
+          this.target = target;
       }
-      
+  
       @Override
-      public void paintComponent(Graphics g) {
+      protected void paintComponent(Graphics g) {
           super.paintComponent(g);
           Graphics2D g2d = (Graphics2D) g;
-          g2d.setColor(Color.RED);
-          g2d.drawLine(x1, y1, x2, y2);
-          int ARR_SIZE = 10;
-          double dx = x2 - x1;
-          double dy = y2 - y1;
-          double angle = Math.atan2(dy, dx);
-          int len = (int) Math.sqrt(dx*dx + dy*dy);
-          AffineTransform at = AffineTransform.getTranslateInstance(x1, y1);
-          at.concatenate(AffineTransform.getRotateInstance(angle));
-          g2d.transform(at);
-          g2d.drawLine(0, 0, len, 0);
-          g2d.fillPolygon(new int[] {len, len-ARR_SIZE, len-ARR_SIZE, len},
-                  new int[] {0, -ARR_SIZE, ARR_SIZE, 0}, 4);
+          g2d.setColor(Color.BLACK);
+          g2d.setStroke(new BasicStroke(2.0f));
+          g2d.drawLine(source.x, source.y, target.x, target.y);
       }
   }
   
 
-    private void createLineBetweenLabels(JComponent panel, JLabel label1, JLabel label2) {
-      Graphics g = panel.getGraphics();
-      Point p1 = getLabelCenter(label1);
-      Point p2 = getLabelCenter(label2);
-      g.drawLine(p1.x, p1.y, p2.x, p2.y);
-  }
+   
   
-  private Point getLabelCenter(JLabel label) {
-      int x = label.getX() + label.getWidth() / 2;
-      int y = label.getY() + label.getHeight() / 2;
-      return new Point(x, y);
-  }
-  
+
   
 
       //find a cell's primary key
@@ -1178,6 +1140,7 @@ scrollPane.setRowHeaderView(linePanel);
       public ArrayList<mxCell> primaryKey;
       public ArrayList<mxCell> Unique; 
       public ArrayList<Foreign> foreignKey;
+      public JPanel tableSquare;
 
       public Table(String name, mxCell cell) {
         this.name = name;

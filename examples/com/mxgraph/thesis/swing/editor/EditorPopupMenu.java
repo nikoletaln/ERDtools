@@ -1,5 +1,9 @@
 package com.mxgraph.thesis.swing.editor;
 
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.MenuContainer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ButtonGroup;
@@ -10,12 +14,18 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
+import javax.swing.SwingUtilities;
+
 import com.mxgraph.swing.util.mxGraphActions;
 import com.mxgraph.thesis.swing.editor.EditorActions.FontStyleAction;
+import com.mxgraph.util.mxRectangle;
+import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.analysis.mxAnalysisGraph;
+import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.model.mxCell;
+import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxIGraphModel;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -32,6 +42,8 @@ public class EditorPopupMenu extends JPopupMenu
 		boolean selected = !editor.getGraphComponent().getGraph().isSelectionEmpty();
 		mxCell cell = (mxCell) c;
 		final mxGraph graph = graphComponent.getGraph();
+
+		String cellStyle = cell.getStyle();
 		JMenuItem rename = new JMenuItem("Rename");
 		
 		rename.addActionListener(new ActionListener() {
@@ -47,14 +59,48 @@ public class EditorPopupMenu extends JPopupMenu
 						input = input.replace(" ", "_");
 					}
 					cell.setValue(input);
-					graph.refresh();
-				}
-				model.endUpdate();
+
+			  // Get the graphics object and create a new FontMetrics instance
+			  Graphics graphics = graphComponent.getGraphics();
+			  FontMetrics metrics = graphics.getFontMetrics();
+					
+			  int labelWidth = SwingUtilities.computeStringWidth(metrics, input);
+			  int labelHeight = metrics.getHeight();
+
+            // Retrieve the cell's geometry
+            mxGeometry geometry = cell.getGeometry();
+            double cellHeight = geometry.getHeight();
+
+            // Check if the label size is bigger than the default label width
+            if (labelWidth > 50  )  {
+                // Update the cell size to accommodate the label
+                // Update the cell width to wrap the label width
+           		double newWidth = 3*labelWidth; // Add some padding
+           		geometry.setWidth(newWidth);
+				double newHeight = Math.max(labelHeight + 20, cellHeight);
+				geometry.setHeight(newHeight);
+				geometry.setRelative(false);
+				// Apply the updated geometry to the cell
+                model.setGeometry(cell, geometry);
+
+				graphComponent.refresh();
+                // Refresh the graph to reflect the changes
+                graph.refresh();
+            }
+        }
+		graph.refresh();
+        model.endUpdate();
 			}		
 		});
+
+		
+		if(!cellStyle.contains("d_circle")&&!cellStyle.contains("o_circle") &&!cellStyle.contains("U_circle")) {
 		add(rename);
+		addSeparator();	
+		}
+		
 	   
-		String cellStyle = cell.getStyle();
+		//String cellStyle = cell.getStyle();
 
      	if(cellStyle.contains("ellipse")||cellStyle.contains("doubleEl")||cellStyle.contains("dashed")
 		   || cellStyle.contains("rectangle")||cellStyle.contains("doubleRect")|| cellStyle.contains("rhombus")
@@ -66,7 +112,7 @@ public class EditorPopupMenu extends JPopupMenu
 		if(cellStyle.contains("ellipse")||cellStyle.contains("ellipse;fontSize") ||cellStyle.contains("primary")||cellStyle.contains("unique")||cellStyle.contains("partial")
 			||cellStyle.contains("doubleEl")||cellStyle.contains("dashed")
 			||cellStyle.contains("un_dl")) {
-			addSeparator();	
+			//addSeparator();	
 							
 			JMenu bMenu = new JMenu("Belongs");
 			JMenuItem menuItem = new JMenuItem("set Owner");
@@ -551,7 +597,7 @@ public class EditorPopupMenu extends JPopupMenu
 				}
 			});
 
-			addSeparator();	
+			//addSeparator();	
 
 		}		
 
@@ -1491,7 +1537,7 @@ public class EditorPopupMenu extends JPopupMenu
 		}
 
 		if (cellStyle.contains("U_circle")) {
-			addSeparator();	
+			//addSeparator();	
 			JMenu bMenu = new JMenu("sub");
 			JMenu menuItem = new JMenu("set sub");
 			JRadioButton sTotal = new JRadioButton("sub total");
@@ -1547,7 +1593,7 @@ public class EditorPopupMenu extends JPopupMenu
 		}
 
 		if (cellStyle.contains("d_circle")||cellStyle.contains("o_circle")) {
-			addSeparator();	
+			//addSeparator();	
 			JMenu overl = new JMenu("set overlapping");
 			JCheckBox overla = new JCheckBox("overlapping");
 			if (cellStyle.contains("o_circle")){
