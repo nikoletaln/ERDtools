@@ -152,7 +152,7 @@ public class EditorAboutFrame extends JDialog {
 		getRootPane().setDefaultButton(closeButton);
 
 		setResizable(false);
-		setSize(600, 500);
+		setSize(600, 600);
 	}
 
 	/**

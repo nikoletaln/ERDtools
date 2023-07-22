@@ -383,3 +383,38 @@ Launcher:	C:\Program Files\Java\jdk-18.0.2.1\bin\javaw.exe
 Launcher args:	-jar "C:\Users\nikol\OneDrive\Desktop\erd_tools\erd_tools.exe"
 Args length:	62/32768 chars
 Exit code:	0
+
+
+Version:	3.50
+CmdLine:	C:\Users\nikol\OneDrive\Desktop\erd_tools\erd_tools.exe --l4j-debug
+JNI:		No
+WOW64:		Yes
+Working dir:	C:\Users\nikol\OneDrive\Desktop\erd_tools\.
+Requires JDK:	No
+Requires 64-Bit: No
+Java min ver:	1.008.000
+Java max ver:	
+Substitute:	JAVA_HOME = C:\Program Files\Java\jdk-18
+Substitute:	PATH = C:\Program Files\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files\Git\cmd;C:\Users\nikol\AppData\Local\Programs\Python\Python311\Scripts\;C:\Users\nikol\AppData\Local\Programs\Python\Python311\;C:\Users\nikol\AppData\Local\Microsoft\WindowsApps;;C:\Users\nikol\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\nikol\.dotnet\tools;C:\Program Files\Java\jdk-18.0.2.1\bin
+JRE paths:	C:\Program Files\Java\jdk-18;C:\Program Files\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files\Git\cmd;C:\Users\nikol\AppData\Local\Programs\Python\Python311\Scripts\;C:\Users\nikol\AppData\Local\Programs\Python\Python311\;C:\Users\nikol\AppData\Local\Microsoft\WindowsApps;;C:\Users\nikol\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\nikol\.dotnet\tools;C:\Program Files\Java\jdk-18.0.2.1\bin
+Check launcher:	C:\Program Files\Java\jdk-18\bin\javaw.exe (not found)
+Check launcher:	C:\Program Files\Common Files\Oracle\Java\javapath\bin\javaw.exe (not found)
+Check launcher:	C:\WINDOWS\system32\bin\javaw.exe (not found)
+Check launcher:	C:\WINDOWS\bin\javaw.exe (not found)
+Check launcher:	C:\WINDOWS\System32\Wbem\bin\javaw.exe (not found)
+Check launcher:	C:\WINDOWS\System32\WindowsPowerShell\v1.0\bin\javaw.exe (not found)
+Check launcher:	C:\WINDOWS\System32\OpenSSH\bin\javaw.exe (not found)
+Check launcher:	C:\Program Files\dotnet\bin\javaw.exe (not found)
+Check launcher:	C:\Program Files\Git\cmd\bin\javaw.exe (not found)
+Check launcher:	C:\Users\nikol\AppData\Local\Programs\Python\Python311\Scripts\bin\javaw.exe (not found)
+Check launcher:	C:\Users\nikol\AppData\Local\Programs\Python\Python311\bin\javaw.exe (not found)
+Check launcher:	C:\Users\nikol\AppData\Local\Microsoft\WindowsApps\bin\javaw.exe (not found)
+Check launcher:	C:\Users\nikol\AppData\Local\Programs\Microsoft VS Code\bin\javaw.exe (not found)
+Check launcher:	C:\Users\nikol\.dotnet\tools\bin\javaw.exe (not found)
+Check launcher:	C:\Program Files\Java\jdk-18.0.2.1\bin\javaw.exe (OK)
+Warning:	formatJavaVersion() too many parts added.
+Version string: 1.018.000_002 / 64-Bit (OK)
+Launcher:	C:\Program Files\Java\jdk-18.0.2.1\bin\javaw.exe
+Launcher args:	-jar "C:\Users\nikol\OneDrive\Desktop\erd_tools\erd_tools.exe"
+Args length:	62/32768 chars
+Exit code:	0
