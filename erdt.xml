@@ -3,7 +3,7 @@
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
   <jar>C:\Users\nikol\OneDrive\Desktop\erd_tools\ERD_tools.jar</jar>
-  <outfile>C:\Users\nikol\OneDrive\Desktop\erd_tools\erd_tools.exe</outfile>
+  <outfile>C:\Users\nikol\OneDrive\Desktop\ERD_tools\erd_tools.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>

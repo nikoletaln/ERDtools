@@ -667,9 +667,9 @@ public class EditorPopupMenu extends JPopupMenu
 			JRadioButton lPartialK = new JRadioButton("set partial K");
 			JRadioButton lPartialL = new JRadioButton("set partial L");
 			ButtonGroup group1 = new ButtonGroup();
-			group1.add(tTotal1);group1.add(tTotalN);group1.add(tTotalM);group1.add(tTotalK);group1.add(tTotalL);
-			group1.add(tPartial1);group1.add(tPartialN);group1.add(tPartialM);group1.add(tPartialK);group1.add(tPartialL);
-			group1.add(tTotal);group1.add(tTotal);
+			group1.add(lTotal1);group1.add(lTotalN);group1.add(lTotalM);group1.add(lTotalK);group1.add(lTotalL);
+			group1.add(lPartial1);group1.add(lPartialN);group1.add(lPartialM);group1.add(lPartialK);group1.add(lPartialL);
+			group1.add(lTotal);group1.add(lTotal);
 
 			JMenuItem lmenuItem1 = new JMenuItem("remove");
 
@@ -1298,7 +1298,7 @@ public class EditorPopupMenu extends JPopupMenu
 			else if (cell.hasRightOwner()) {
 				rmenuItem.add(rPartial1);
 				rmenuItem.add(rPartialN);rmenuItem.add(rPartialM);rmenuItem.add(rPartialK);rmenuItem.add(rPartialL);
-				rmenuItem.add(lTotal1);rmenuItem.add(rTotalN);rmenuItem.add(rTotalM);rmenuItem.add(rTotalK);rmenuItem.add(rTotalL);
+				rmenuItem.add(rTotal1);rmenuItem.add(rTotalN);rmenuItem.add(rTotalM);rmenuItem.add(rTotalK);rmenuItem.add(rTotalL);
 			}
 			rMenu.add(rmenuItem);
 			rMenu.add(rmenuItem1);add(rMenu);

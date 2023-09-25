@@ -28,6 +28,7 @@ import java.awt.font.TextAttribute;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.CubicCurve2D;
 import java.awt.geom.Line2D;
+import java.awt.geom.QuadCurve2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
@@ -354,7 +355,60 @@ public class Convertor extends JFrame {
               String cellStyle = cell.getStyle();
               if (cellStyle.contains("rhombus")) { 
                 Boolean type1= false;
-                Object[] currentEdges =  graph.getEdges(cell); 
+                int i=0;
+                Object[] edgeArray = new Object[4];
+                String[] edgeStyle = new String[4];
+
+                if(cell.hasTopOwner()) {
+                  Object[] currentEdge =  graph.getEdgesBetween(cell,cell.getTopOwner()); 
+                  edgeArray[i]=currentEdge[0];
+                  Object currEdge = currentEdge[0];
+                  String edgeS = ((mxCell) currEdge).getStyle();
+                  edgeStyle[i] = edgeS; 
+                   System.out.println("top");
+                   System.out.println(edgeArray[i]);
+                   System.out.println(edgeStyle[i]);
+                  i++;
+                  
+                }
+                 if(cell.hasLeftOwner()) {
+                   Object[] currentEdge =  graph.getEdgesBetween(cell,cell.getLeftOwner()); 
+                    edgeArray[i]=currentEdge[0];
+                    Object currEdge = currentEdge[0];
+                  String edgeS = ((mxCell) currEdge).getStyle();
+                  edgeStyle[i] = edgeS; 
+                     System.out.println("left");
+                   System.out.println(edgeArray[i]);
+                   System.out.println(edgeStyle[i]);
+                  i++;
+                 
+                }
+                 if(cell.hasRightOwner()) {
+                   Object[] currentEdge =  graph.getEdgesBetween(cell,cell.getRightOwner()); 
+                  edgeArray[i]=currentEdge[0];
+                  Object currEdge = currentEdge[0];
+                  String edgeS = ((mxCell) currEdge).getStyle();
+                  edgeStyle[i] = edgeS; 
+                   System.out.println("right");
+                   System.out.println(edgeArray[i]);
+                   System.out.println(edgeStyle[i]);
+                  i++;
+                 
+                }
+                 if(cell.hasBottomOwner()) {
+                   Object[] currentEdge =  graph.getEdgesBetween(cell,cell.getBottomOwner()); 
+                    edgeArray[i]=currentEdge[0];
+                    Object currEdge = currentEdge[0];
+                  String edgeS = ((mxCell) currEdge).getStyle();
+                  edgeStyle[i] = edgeS; 
+                    System.out.println("bottom");
+                   System.out.println(edgeArray[i]);
+                   System.out.println(edgeStyle[i]);
+                  i++;
+                  
+                }
+
+                Object[] currentEdges =  graph.getEdges(cell);
                 for (Object cE:currentEdges) {
                   String edgeValue = (String) ((mxCell) cE).getValue();
                   //1:1 or 1:N type
@@ -363,25 +417,48 @@ public class Convertor extends JFrame {
                   }
                 }
 
-                if (currentEdges.length==2 && type1==true) { 
-
+                if (i==2 && type1==true) { 
                   Table table = null;
                   mxCell entity = null;
                   Boolean totalOrN = false;
-                  for (Object cE:currentEdges) {
-                    String edgeStyle = ((mxCell) cE).getStyle();
-                    String edgeValue = (String) ((mxCell) cE).getValue();
-                    //N or total 
-                    if (edgeStyle.contains("strokeWidth=5;") || !edgeValue.equals("1")) { 
+                 // Object[] edgeArray = (list[0],list[1]);
+                //   for (Object cE:currentEdges) {
+                //     String edgeStyle = ((mxCell) cE).getStyle();
+                //     String edgeValue = (String) ((mxCell) cE).getValue();
+                //     int edg;
+                //    if (currentEdges[edg]) { }
+                //     //N or total 
+                //     if (edgeStyle.contains("strokeWidth=5;") || !edgeValue.equals("1")) { 
+                //       if (cE != currentEdges[0]) {
+                //       //find the entity
+                //       entity =  (mxCell) aGraph.getTerminal(cE, false); 
+                //       System.out.println(entity.getValue());
+                //       //find the entity's table 
+                //       table = getTableByCell(entity, tables);
+                //       totalOrN=true;
+                //     }   
+                //   } 
+                // }
+                  
+                   // String edgStyle = (String) ((mxCell) edgeArray[0]).getStyle();
+                    String edgValue = (String) ((mxCell) edgeArray[0]).getValue();
+                    if (edgValue.equals("1")) {
+                    //  String edgeStyle1 = (String) ((mxCell) edgeArray[1]).getStyle();
+                      String edgeValue1 = (String) ((mxCell) edgeArray[1]).getValue();
+                      //N or total 
+                       if (edgeStyle[1].contains("strokeWidth=5;") || !edgeValue1.equals("1")) { 
                       //find the entity
-                      entity =  (mxCell) aGraph.getTerminal(cE, false); 
+                      entity =  (mxCell) aGraph.getTerminal(edgeArray[1], false); 
+                      System.out.println(entity.getValue());
                       //find the entity's table 
                       table = getTableByCell(entity, tables);
                       totalOrN=true;
-                    }   
-                  } 
+                      } 
+                    }
+                    
+                
                   if (totalOrN==false) {
-                    entity =  (mxCell) aGraph.getTerminal(currentEdges[0], false);
+                    entity =  (mxCell) aGraph.getTerminal(edgeArray[0], false);
                     table = getTableByCell(entity, tables);
                   }
 
@@ -418,18 +495,18 @@ public class Convertor extends JFrame {
                   Table table1 = null;
                   mxCell entity1 = null;
                   if (totalOrN==true) {
-                    for (Object cE:currentEdges) {
+                  //  for (Object cE:currentEdges) {
                       
-                      String edgeValue = (String) ((mxCell) cE).getValue();
+                  //    String edgeValue = (String) ((mxCell) cE).getValue();
                       //find the other entity
-                      if (edgeValue.equals("1")) { 
-                        entity1 =  (mxCell) aGraph.getTerminal(cE, false); 
+                      //if (edgeValue.equals("1")) { 
+                        entity1 =  (mxCell) aGraph.getTerminal(edgeArray[0], false); 
                         table1 = getTableByCell(entity1, tables);
-                      }
-                    }
+                    //  }
+                   // }
                   }
                   else if (totalOrN==false) {
-                    entity1 =  (mxCell) aGraph.getTerminal(currentEdges[1], false);
+                    entity1 =  (mxCell) aGraph.getTerminal(edgeArray[1], false);
                     table1 = getTableByCell(entity1, tables);
                   }
 
@@ -456,7 +533,60 @@ public class Convertor extends JFrame {
               String cellStyle = cell.getStyle();
               if (cellStyle.contains("rhombus")) { 
                 Boolean type1= false;
-                Object[] currentEdges =  graph.getEdges(cell); 
+                 int i=0;
+                Object[] edgeArray = new Object[4];
+                String[] edgeStyle = new String[4];
+
+                if(cell.hasTopOwner()) {
+                  Object[] currentEdge =  graph.getEdgesBetween(cell,cell.getTopOwner()); 
+                  edgeArray[i]=currentEdge[0];
+                  Object currEdge = currentEdge[0];
+                  String edgeS = ((mxCell) currEdge).getStyle();
+                  edgeStyle[i] = edgeS; 
+                   System.out.println("top");
+                   System.out.println(edgeArray[i]);
+                   System.out.println(edgeStyle[i]);
+                  i++;
+                  
+                }
+                 if(cell.hasLeftOwner()) {
+                   Object[] currentEdge =  graph.getEdgesBetween(cell,cell.getLeftOwner()); 
+                    edgeArray[i]=currentEdge[0];
+                    Object currEdge = currentEdge[0];
+                  String edgeS = ((mxCell) currEdge).getStyle();
+                  edgeStyle[i] = edgeS; 
+                     System.out.println("left");
+                   System.out.println(edgeArray[i]);
+                   System.out.println(edgeStyle[i]);
+                  i++;
+                 
+                }
+                 if(cell.hasRightOwner()) {
+                   Object[] currentEdge =  graph.getEdgesBetween(cell,cell.getRightOwner()); 
+                  edgeArray[i]=currentEdge[0];
+                  Object currEdge = currentEdge[0];
+                  String edgeS = ((mxCell) currEdge).getStyle();
+                  edgeStyle[i] = edgeS; 
+                   System.out.println("right");
+                   System.out.println(edgeArray[i]);
+                   System.out.println(edgeStyle[i]);
+                  i++;
+                 
+                }
+                 if(cell.hasBottomOwner()) {
+                   Object[] currentEdge =  graph.getEdgesBetween(cell,cell.getBottomOwner()); 
+                    edgeArray[i]=currentEdge[0];
+                    Object currEdge = currentEdge[0];
+                  String edgeS = ((mxCell) currEdge).getStyle();
+                  edgeStyle[i] = edgeS; 
+                    System.out.println("bottom");
+                   System.out.println(edgeArray[i]);
+                   System.out.println(edgeStyle[i]);
+                  i++;
+                  
+                }
+
+                Object[] currentEdges =  graph.getEdges(cell);
                 for (Object cE:currentEdges) {
                   String edgeValue = (String) ((mxCell) cE).getValue();
                   //1:1 or 1:N type
@@ -464,8 +594,12 @@ public class Convertor extends JFrame {
                     type1=true;
                   }
                 }
+
                 //N:M or 1:N:M or K:N:M etc
-                if (currentEdges.length!=2 || type1==false) { 
+                if (i!=2 || type1==false) { 
+                  System.out.println(edgeArray);
+                  System.out.println(type1 );
+                  System.out.println(cell.getValue());
                   Table table = null;
                   int counter = 0;
                   Boolean check = false;
@@ -522,7 +656,7 @@ public class Convertor extends JFrame {
                     }
                   }
                   
-                  ArrayList<mxCell> list = new ArrayList<mxCell>();
+                  ArrayList<mxCell> list1 = new ArrayList<mxCell>();
                   for (Object cE:currentEdges) {
                     Foreign f = new Foreign();
                     int counter1 = table.foreignKey.size() + 1;
@@ -544,18 +678,18 @@ public class Convertor extends JFrame {
                       }
                       f.refersTo = entity;
                       f.constraint =  "ON DELETE CASCADE ON UPDATE CASCADE" ;
-                      table.attributes.addAll(f.List);
+                     table.attributes.addAll(f.List);
                       if (!edgeValue.equals("1")) {
                         table.primaryKey.addAll(f.List);
                       }
-                      list.addAll(f.List);
+                      list1.addAll(f.List);
                       table.foreignKey.add(f);
                     }
                   } 
                   //if no primary keys found
                   if ( table.primaryKey.size() == 0) {
                     Boolean b = true;
-                    for (mxCell l : list){
+                    for (mxCell l : list1){
                       if(b) {
                         table.primaryKey.add(l);
                         b=false;
@@ -640,6 +774,7 @@ public class Convertor extends JFrame {
                     }
                   }
                 }
+
                 if (table.attributes.size()==0) {
                   table.attributes.add(cell);
                 }
@@ -665,12 +800,64 @@ public class Convertor extends JFrame {
                     }
                     f.refersTo = ref;
                     f.constraint =  "ON DELETE CASCADE ON UPDATE CASCADE" ;
-                    table.attributes.addAll(f.List);
+                   // table.attributes.addAll(f.List);
                   }
 
                   //if multivalued belongs to a relationship 
                   else if (sourceStyle.contains("rhombus")) {
                     Boolean type1= false;
+                     int i=0;
+                Object[] edgeArray = new Object[4];
+                String[] edgeStyle = new String[4];
+
+                if(edgeSource.hasTopOwner()) {
+                  Object[] currentEdge =  graph.getEdgesBetween(edgeSource,edgeSource.getTopOwner()); 
+                  edgeArray[i]=currentEdge[0];
+                  Object currEdge = currentEdge[0];
+                  String edgeS = ((mxCell) currEdge).getStyle();
+                  edgeStyle[i] = edgeS; 
+                   System.out.println("top");
+                   System.out.println(edgeArray[i]);
+                   System.out.println(edgeStyle[i]);
+                  i++;
+                  
+                }
+                 if(edgeSource.hasLeftOwner()) {
+                   Object[] currentEdge =  graph.getEdgesBetween(edgeSource,edgeSource.getLeftOwner()); 
+                    edgeArray[i]=currentEdge[0];
+                    Object currEdge = currentEdge[0];
+                  String edgeS = ((mxCell) currEdge).getStyle();
+                  edgeStyle[i] = edgeS; 
+                     System.out.println("left");
+                   System.out.println(edgeArray[i]);
+                   System.out.println(edgeStyle[i]);
+                  i++;
+                 
+                }
+                 if(edgeSource.hasRightOwner()) {
+                   Object[] currentEdge =  graph.getEdgesBetween(edgeSource,edgeSource.getRightOwner()); 
+                  edgeArray[i]=currentEdge[0];
+                  Object currEdge = currentEdge[0];
+                  String edgeS = ((mxCell) currEdge).getStyle();
+                  edgeStyle[i] = edgeS; 
+                   System.out.println("right");
+                   System.out.println(edgeArray[i]);
+                   System.out.println(edgeStyle[i]);
+                  i++;
+                 
+                }
+                 if(edgeSource.hasBottomOwner()) {
+                   Object[] currentEdge =  graph.getEdgesBetween(edgeSource,edgeSource.getBottomOwner()); 
+                    edgeArray[i]=currentEdge[0];
+                    Object currEdge = currentEdge[0];
+                  String edgeS = ((mxCell) currEdge).getStyle();
+                  edgeStyle[i] = edgeS; 
+                    System.out.println("bottom");
+                   System.out.println(edgeArray[i]);
+                   System.out.println(edgeStyle[i]);
+                  i++;
+                  
+                }
                     Object[] cEdges =  graph.getEdges(edgeSource); 
                     for (Object cEdge:cEdges) {
                       String edgeValue = (String) ((mxCell) cEdge).getValue();
@@ -680,24 +867,43 @@ public class Convertor extends JFrame {
                       }
                     }
                     //1:1 or 1:N type
-                    if (currentEdges.length==2 && type1==true) { 
+                    if (i==2 && type1==true) { 
                       Boolean totalOrN = false;
-                      for (Object cEdge:cEdges) {
-                        String edgeStyle = ((mxCell) cEdge).getStyle();
-                        String edgeValue = (String) ((mxCell) cEdge).getValue();
-                        //N or total 
-                        if (edgeStyle.contains("strokeWidth=5;") || !edgeValue.equals("1")) { 
-                          //find the entity
-                          ref =  (mxCell) aGraph.getTerminal(cEdge, false); 
-                          //find the entity's table
-                          tab = getTableByCell(ref, tables);
-                          totalOrN=true;
-                        }   
+                       String edgValue = (String) ((mxCell) edgeArray[0]).getValue();
+                    if (edgValue.equals("1")) {
+                    //  String edgeStyle1 = (String) ((mxCell) edgeArray[1]).getStyle();
+                      String edgeValue1 = (String) ((mxCell) edgeArray[1]).getValue();
+                      //N or total 
+                       if (edgeStyle[1].contains("strokeWidth=5;") || !edgeValue1.equals("1")) { 
+                      //find the entity
+                      ref =  (mxCell) aGraph.getTerminal(edgeArray[1], false); 
+                      //find the entity's table 
+                       tab = getTableByCell(ref, tables);
+                      totalOrN=true;
                       } 
-                      if (totalOrN==false) {
-                        ref =  (mxCell) aGraph.getTerminal(currentEdges[0], false);
-                        tab = getTableByCell(ref, tables);
-                      }
+                    }
+                    
+                
+                  if (totalOrN==false) {
+                    ref =  (mxCell) aGraph.getTerminal(edgeArray[0], false);
+                    table = getTableByCell(ref, tables);
+                  }
+                      // for (Object cEdge:cEdges) {
+                      //   String edgeSt = ((mxCell) cEdge).getStyle();
+                      //   String edgeValue = (String) ((mxCell) cEdge).getValue();
+                      //   //N or total 
+                      //   if (edgeSt.contains("strokeWidth=5;") || !edgeValue.equals("1")) { 
+                      //     //find the entity
+                      //     ref =  (mxCell) aGraph.getTerminal(cEdge, false); 
+                      //     //find the entity's table
+                      //     tab = getTableByCell(ref, tables);
+                      //     totalOrN=true;
+                      //   }   
+                      // } 
+                      // if (totalOrN==false) {
+                      //   ref =  (mxCell) aGraph.getTerminal(currentEdges[0], false);
+                      //   tab = getTableByCell(ref, tables);
+                      // }
                       for(mxCell pri:tab.primaryKey) { 
                         mxCell newpk = new mxCell();
                         newpk.setNotNull(true);
@@ -708,11 +914,11 @@ public class Convertor extends JFrame {
                       }
                       f.refersTo = ref;
                       f.constraint =  "ON DELETE CASCADE ON UPDATE CASCADE" ;
-                      table.attributes.addAll(f.List);
+                    //  table.attributes.addAll(f.List);
                     }
 
                     //N:M or 1:N:M or K:N:M etc
-                    else if (currentEdges.length!=2 || type1==false) { 
+                    else if (i!=2 || type1==false) { 
                       ref = edgeSource;
                       tab = getTableByCell(ref, tables);
                       for(mxCell pri:tab.primaryKey) { 
@@ -753,7 +959,7 @@ public class Convertor extends JFrame {
           
                       Map<String, Point> tablePositions = new HashMap<>();
                       Map<String, List<String>> tableAttribute = new HashMap<>();
-                      int spacing = 100;
+                      int spacing = 50;
                       int x = spacing;
                       int y = spacing;
           
@@ -761,7 +967,7 @@ public class Convertor extends JFrame {
                       for (Table table : tables) {
                           // Draw the table rectangle
                           g2d.setColor(Color.LIGHT_GRAY);
-                          int tableWidth = 200 + (table.attributes.size() * 20);
+                          int tableWidth = 250 + (table.attributes.size() * 25 + table.foreignKey.size() * 25);
                           int tableHeight = 55 ;//+ (table.attributes.size() * 20);
                           g2d.fillRect(x, y+23, tableWidth, tableHeight-23);
                           g2d.setColor(Color.BLACK);
@@ -776,7 +982,7 @@ public class Convertor extends JFrame {
                           g2d.setFont(new Font("Arial", Font.PLAIN, 12));
                           int attributeX = x + 10; // Starting X position for attributes
                           int attributeY = y + 40; // Starting Y position for attributes
-          
+                          List<mxCell> drawnAttributes = new ArrayList<>();
                           for (mxCell pk : table.primaryKey) {
                               String attributeName = (String) pk.getValue();
                               AttributedString attributedString = new AttributedString(attributeName);
@@ -785,32 +991,73 @@ public class Convertor extends JFrame {
           
                               // Draw the underlined text
                               g2d.drawString(attributedString.getIterator(), attributeX, attributeY);
-                              attributeX += g2d.getFontMetrics().stringWidth(attributeName) + 20; // Adjust spacing
+                              attributeX += g2d.getFontMetrics().stringWidth(attributeName) + 10; // Adjust spacing
                               tableAttribute.computeIfAbsent(table.name, k -> new ArrayList<>()).add(attributeName);
+                               drawnAttributes.add(pk);
                                
                           }
           
                           // Draw the table attributes
                           for (mxCell attribute : table.attributes) {
-                            boolean isForeignKey = false;
-                            for (Foreign foreignKey : table.foreignKey) {
-                              for (mxCell cell : foreignKey.List){
-                                if (cell == attribute) {
-                                 isForeignKey = true;
-                                 break;
-                                }
+                            if (drawnAttributes.contains(attribute)) {
+                              continue; 
+                            }
+                           boolean isForeignKey = false;
+                            isForeignKey = table.foreignKey.stream()
+                           .anyMatch(foreignKey -> foreignKey.List.stream()
+                           .anyMatch(cell -> cell == attribute));
+                            // for (Foreign foreignKey : table.foreignKey) {
+                            //   for (mxCell cell : foreignKey.List){
+                            //     if (cell == attribute) {
+                            //      isForeignKey = true;
+                            //      break;
+                            //     }
+                            //   }
+                            // }
+                            
+                            boolean isPrimaryKeyAttribute = false;
+                            if (isForeignKey) {
+              
+                            for (mxCell pk : table.primaryKey) {
+                              if (pk == attribute) {
+                                isPrimaryKeyAttribute = true;
+                                break;
                               }
                             }
+                          
 
-                            if (!isForeignKey) {
-                              for (mxCell pri : table.primaryKey) {
-                                if (attribute != pri) {
-                                  String attributeName1 = (String) attribute.getValue();
-                                  g2d.drawString(attributeName1, attributeX, attributeY);
-                                  attributeX += g2d.getFontMetrics().stringWidth(attributeName1) + 20; // Adjust spacing
-                                }
+                            if (!isPrimaryKeyAttribute) {
+                              if (drawnAttributes.contains(attribute)) {
+                                  continue; 
                               }
-                            }
+                              String attributeName1 = (String) attribute.getValue();
+                              g2d.drawString(attributeName1, attributeX, attributeY);
+                              attributeX += g2d.getFontMetrics().stringWidth(attributeName1) + 10; 
+                              drawnAttributes.add(attribute);
+                          }
+                        }
+                        if (!isForeignKey) {
+                             for (mxCell pri : table.primaryKey) {
+                                if (attribute != pri) {
+                                  if (drawnAttributes.contains(attribute)) {
+                                   continue; 
+                                   }
+                                   String attributeName1 = (String) attribute.getValue();
+                                 g2d.drawString(attributeName1, attributeX, attributeY);
+                                   attributeX += g2d.getFontMetrics().stringWidth(attributeName1) + 10; // Adjust spacing
+                                   drawnAttributes.add(attribute);
+                                 }
+                               }
+                        }
+
+                              // for (mxCell pri : table.primaryKey) {
+                              //   if (attribute != pri) {
+                              //     String attributeName1 = (String) attribute.getValue();
+                              //     g2d.drawString(attributeName1, attributeX, attributeY);
+                              //     attributeX += g2d.getFontMetrics().stringWidth(attributeName1) + 20; // Adjust spacing
+                              //   }
+                              // }
+                           // }
                           }
           
                           // Store the position of the table
@@ -833,21 +1080,22 @@ public class Convertor extends JFrame {
                                   Point target = tablePositions.get(referencedTable.name);
                                              
                                   int sourceY = source.y + (55 / 2); // Middle Y-coordinate of the source table
-                                  int sourceX = source.x +   200 + (table.attributes.size() * 20); // Right X-coordinate of the source table
+                                  int sourceX = source.x +   250 + (table.attributes.size() * 25 + table.foreignKey.size() * 25); // Right X-coordinate of the source table
                                   int targetY = target.y + (55 / 2); // Middle Y-coordinate of the target table
-                                  int targetX = target.x + 200 + (referencedTable.attributes.size() * 20); // Right X-coordinate of the target table
+                                  int targetX = target.x + 250 + (referencedTable.attributes.size() * 25 + referencedTable.foreignKey.size() * 25); // Right X-coordinate of the target table
 
                                   int dx = targetX - sourceX; // Difference in X-coordinates
                                   int dy = targetY - sourceY; // Difference in Y-coordinates
                                   int controlX1, controlY1, controlX2, controlY2;
-                                  int distance = Math.max(Math.abs(dx), Math.abs(dy));
-                                  controlX1 = sourceX + distance -100;
-                                  controlY1 = sourceY -100;
-                                  controlX2 = sourceX  + distance -100;
-                                  controlY2 = sourceY -100;
-                        
-                                  // Draw curved line using cubic Bezier curve
-                                  g2d.draw(new CubicCurve2D.Double(sourceX, sourceY, controlX1, controlY1, controlX2, controlY2, targetX, targetY));
+                                   int distance = Math.max(Math.abs(dx), Math.abs(dy));
+                                    controlX1 = sourceX + distance;// -70;
+                                    controlY1 = sourceY;// -70;
+                                    controlX2 = sourceX  + distance;// -70;
+                                    controlY2 = sourceY;// -70;
+                                                            
+                                 // g2d.draw(new CubicCurve2D.Double(sourceX, sourceY, controlX1, controlY1, controlX2, controlY2, targetX, targetY));
+                                  g2d.draw(new QuadCurve2D.Double(sourceX, sourceY, controlX1, controlY1, targetX, targetY));
+
                                 }
                               }
                             }
@@ -855,7 +1103,7 @@ public class Convertor extends JFrame {
                         };       
               
                 // Set the preferred size of the schema panel
-                schemaPanel.setPreferredSize(new Dimension(600, 600));
+                schemaPanel.setPreferredSize(new Dimension(900, 700));
     
                 // Create a JScrollPane to contain the schema panel
                 JScrollPane scrollPane = new JScrollPane(schemaPanel);
@@ -869,6 +1117,8 @@ public class Convertor extends JFrame {
                   public void actionPerformed(ActionEvent e) {
                       // Prompt the user to choose the save location
                       JFileChooser fileChooser = new JFileChooser();
+                      FileNameExtensionFilter pngFilter = new FileNameExtensionFilter("PNG Files", "png");
+                      fileChooser.setFileFilter(pngFilter);
                       fileChooser.setDialogTitle("Save as PNG");
                       int userSelection = fileChooser.showSaveDialog(schemaFrame);
 
@@ -889,29 +1139,34 @@ public class Convertor extends JFrame {
                           }
 
                           try {
-                            // Create a BufferedImage to store the schema panel content
-                            BufferedImage image = new BufferedImage(schemaFrame.getWidth(), schemaFrame.getHeight(), BufferedImage.TYPE_INT_RGB);
+                            // Create a larger BufferedImage
+                            int scaleFactor = 2; // You can adjust the scale factor as needed
+                            int scaledWidth = schemaPanel.getWidth() * scaleFactor;
+                            int scaledHeight = schemaPanel.getHeight() * scaleFactor;
+                            BufferedImage image = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_RGB);
                             Graphics2D g2d = image.createGraphics();
                             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                             g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
-                            // Fill the background with white to match the panel
+                            g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY); // Improve rendering quality
+                        
+                            // Fill the background with white
                             g2d.setColor(Color.WHITE);
-                            g2d.fillRect(0, 0, schemaPanel.getWidth(), schemaPanel.getHeight());
+                            g2d.fillRect(0, 0, scaledWidth, scaledHeight);
+                        
                             // Scale the drawing to match the window size
-                            double scaleX = (double) image.getWidth() / (double) schemaPanel.getWidth();
-                            double scaleY = (double) image.getHeight() / (double) schemaPanel.getHeight();
-                            g2d.scale(scaleX, scaleY);
+                            g2d.scale(scaleFactor, scaleFactor);
+                        
                             // Draw the panel content onto the BufferedImage
                             schemaPanel.print(g2d);
                             g2d.dispose();
-
+                        
                             // Save the image as PNG
                             ImageIO.write(image, "png", fileToSave);
                             JOptionPane.showMessageDialog(schemaFrame, "Schema saved as PNG successfully.", "Save", JOptionPane.INFORMATION_MESSAGE);
                         } catch (IOException ex) {
                             JOptionPane.showMessageDialog(schemaFrame, "Failed to save schema as PNG.", "Error", JOptionPane.ERROR_MESSAGE);
                         }
+                        
                     }
                 }
             });
