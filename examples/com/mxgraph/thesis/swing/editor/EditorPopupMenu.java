@@ -1366,7 +1366,37 @@ public class EditorPopupMenu extends JPopupMenu
 				}
 			});
 
+			JMenu defattr = new JMenu("defining attribute");
+			if(cell.hasOwner()) {
+				mxCell owner = (mxCell) cell.getOwner();
+				Object[] currentEdge =  graph.getEdgesBetween(cell,owner); 
+				// get the edge between the shapes 
+				mxCell currEdge = (mxCell) currentEdge[0];
+				Object[] currentEdges =  graph.getEdges(owner); 
+				for(Object cE:currentEdges){
+					mxAnalysisGraph aGraph = new mxAnalysisGraph();
+					aGraph.setGraph(graph);
+					
+					mxCell edgeSource =  (mxCell) aGraph.getTerminal(cE, true); 
+					String sourceStyle = edgeSource.getStyle();
+					String sourceName =(String) edgeSource.getValue();
+					if(sourceStyle.contains ("ellipse")||sourceStyle.contains("ellipse;fontSize")||sourceStyle.contains("ellipse;fontStyle=0")||sourceStyle.contains ("unique")
+						||sourceStyle.contains ("primary")||sourceStyle.contains ("doubleEl")||sourceStyle.contains ("un_dl")){
+							JMenuItem defA = new JMenuItem(sourceName);
+							defattr.add(defA);
+							add(defattr);
+							defA.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent e) {
+										currEdge.setValue(sourceName);
+										graph.refresh();
+								}
+							});
+					}
+				}
+				
+			}	
 
+			
 			set.add(setItem);
 			set.add(setItem1);
 			add(set);

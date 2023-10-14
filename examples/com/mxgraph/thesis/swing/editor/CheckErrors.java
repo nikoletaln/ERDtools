@@ -132,7 +132,7 @@ public class CheckErrors extends JFrame {
                       else { //it is a sub
                         if (cell.hasOwner()){ 
                           hasAtrribute=true;
-                          hasSuper=false;
+                         // hasSuper=false;
                         }else{
                            hasSuper=true;
                         }
