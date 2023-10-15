@@ -96,6 +96,12 @@ public class EditorAboutFrame extends JDialog {
 
 		content.add(Box.createVerticalStrut(10));
 
+		JLabel version = new JLabel("Version 1.1");
+		version.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		content.add(version);
+
+		content.add(Box.createVerticalStrut(10));
+
 		JLabel supervisor = new JLabel("Supervised by: Michael Vassilakopoulos");
 		supervisor.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		content.add(supervisor);
