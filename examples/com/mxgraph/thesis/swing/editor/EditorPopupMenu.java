@@ -1367,6 +1367,7 @@ public class EditorPopupMenu extends JPopupMenu
 			});
 
 			JMenu defattr = new JMenu("defining attribute");
+			JMenuItem defCrit = new JMenuItem("defining criteria");
 			if(cell.hasOwner()) {
 				mxCell owner = (mxCell) cell.getOwner();
 				Object[] currentEdge =  graph.getEdgesBetween(cell,owner); 
@@ -1376,7 +1377,6 @@ public class EditorPopupMenu extends JPopupMenu
 				for(Object cE:currentEdges){
 					mxAnalysisGraph aGraph = new mxAnalysisGraph();
 					aGraph.setGraph(graph);
-					
 					mxCell edgeSource =  (mxCell) aGraph.getTerminal(cE, true); 
 					String sourceStyle = edgeSource.getStyle();
 					String sourceName =(String) edgeSource.getValue();
@@ -1387,12 +1387,51 @@ public class EditorPopupMenu extends JPopupMenu
 							add(defattr);
 							defA.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
-										currEdge.setValue(sourceName);
-										graph.refresh();
+									String newName = currEdge.getValue().toString();
+									if (newName != null && newName.contains("/")) {
+										//if (newName.contains("/")) {
+											String[] parts = newName.split("/");
+											parts[0] = sourceName;
+											newName = String.join("/", parts);
+									} else {
+											newName = sourceName;
+									}
+									mxIGraphModel model = graphComponent.getGraph().getModel();
+									model.beginUpdate();
+									currEdge.setValue(newName);
+									graph.refresh();
+									model.endUpdate();
 								}
 							});
 					}
 				}
+				add(defCrit);
+				defCrit.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						mxIGraphModel model = graphComponent.getGraph().getModel();
+						model.beginUpdate();
+						String newName = currEdge.getValue().toString();
+						String input = JOptionPane.showInputDialog("Defining Criteria: ");
+						if (!input.isEmpty()) {
+							if (newName.isEmpty()||newName.startsWith("/")) {
+								currEdge.setValue("/" + input);
+							}else if (newName.endsWith("/")) {
+								currEdge.setValue(newName  + input);
+							} 
+							else if (newName.contains("/")) {
+								String[] parts = newName.split("/");
+								parts[1] = input;
+								currEdge.setValue(String.join("/", parts));
+							}
+							else {
+								currEdge.setValue(newName +"/" + input);
+							}
+							graph.refresh();
+						}
+						
+						model.endUpdate();
+					}
+				});
 				
 			}	
 
@@ -1761,8 +1800,64 @@ public class EditorPopupMenu extends JPopupMenu
 			
 
 		addSeparator();
-		add(editor.bind("Delete", mxGraphActions.getDeleteAction(),
-					"/com/mxgraph/thesis/swing/images/delete.gif")).setEnabled(selected);
+
+		JMenuItem delete = new JMenuItem("Delete");
+		
+		delete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mxIGraphModel model = graphComponent.getGraph().getModel();
+				model.beginUpdate();
+				if(cellStyle.contains("ellipse")||cellStyle.contains("doubleEl")||cellStyle.contains("dashed")||cellStyle.contains("primary")||cellStyle.contains("unique")||cellStyle.contains("partial")||cellStyle.contains("ellipse;fontStyle=0") 
+		  		 || cellStyle.contains("un_dl")||cellStyle.contains("ellipse;fontSize")){
+					Object[] currentEdges =  graph.getEdges(cell); 
+					for(Object cE: currentEdges){
+						mxAnalysisGraph aGraph = new mxAnalysisGraph();
+						aGraph.setGraph(graph);
+						mxCell edgeSource =  (mxCell) aGraph.getTerminal(cE, true); 
+						String sourceStyle = edgeSource.getStyle(); 
+						if(sourceStyle.contains("ellipse")||sourceStyle.contains("doubleEl")||sourceStyle.contains("dashed")||sourceStyle.contains("primary")||sourceStyle.contains("unique")||sourceStyle.contains("partial")||sourceStyle.contains("ellipse;fontStyle=0") 
+		  					 || sourceStyle.contains("un_dl")||sourceStyle.contains("ellipse;fontSize")) {
+								if(edgeSource.getOwner()==cell){
+									editor.removeOwner(edgeSource);
+								}
+						}
+					}
+			}
+
+			 if(cellStyle.contains("rectangle")||cellStyle.contains("doubleRect")|| cellStyle.contains("rhombus")
+		  		 || cellStyle.contains("doubleRh") ) {
+					Object[] currentEdges =  graph.getEdges(cell); 
+					for(Object cE: currentEdges){
+						mxAnalysisGraph aGraph = new mxAnalysisGraph();
+						aGraph.setGraph(graph);
+						mxCell edgeSource =  (mxCell) aGraph.getTerminal(cE, true); 
+						String sourceStyle = edgeSource.getStyle(); 
+						if(sourceStyle.contains("ellipse")||sourceStyle.contains("doubleEl")||sourceStyle.contains("dashed")||sourceStyle.contains("primary")||sourceStyle.contains("unique")||sourceStyle.contains("partial")||sourceStyle.contains("ellipse;fontStyle=0") 
+		  					 || sourceStyle.contains("un_dl")||sourceStyle.contains("ellipse;fontSize")||sourceStyle.contains("rectangle")||sourceStyle.contains("doubleRect")|| sourceStyle.contains("rhombus")|| sourceStyle.contains("doubleRh")) {
+								if(edgeSource.getOwner()==cell){
+									editor.removeOwner(edgeSource);
+								}
+						}
+						if (sourceStyle.contains("d_circle")||sourceStyle.contains("o_circle")||sourceStyle.contains("U_circle")) {
+							if(edgeSource.getOwner()==cell){
+								editor.removeOwner(edgeSource);
+							}
+							if(edgeSource.ssList.contains(cell)){
+								edgeSource.removeSS(cell);
+							}
+						}
+					}
+			}
+			graph.removeCells();
+			graph.refresh();
+       		model.endUpdate();
+			}		
+		});
+		add(delete);
+	
+
+		// add(editor.bind("Delete", mxGraphActions.getDeleteAction(),
+		// 			"/com/mxgraph/thesis/swing/images/delete.gif")).setEnabled(selected);
 					
    }  
    

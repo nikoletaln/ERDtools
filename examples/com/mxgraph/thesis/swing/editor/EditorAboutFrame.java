@@ -96,7 +96,7 @@ public class EditorAboutFrame extends JDialog {
 
 		content.add(Box.createVerticalStrut(10));
 
-		JLabel version = new JLabel("Version 1.1");
+		JLabel version = new JLabel("Version 1.3");
 		version.setFont(new Font("Times New Roman", Font.PLAIN, 12));
 		content.add(version);
 
